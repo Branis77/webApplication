@@ -1,0 +1,63 @@
+
+{% block javascripts_page %}
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div id="form">
+        {{ form_start(choosenForm) }}
+        {{ form_end(choosenForm) }}
+    </div>
+    <button id="showGraph">Show Graph</button>
+    <div id="chartMain" style="width: 100%; height: 450px;"></div>
+
+    <!-- --------chartMain------------ -->
+
+    <script type="text/javascript">
+
+
+        document.getElementById('showGraph').onclick = function () {
+            myFunction()
+        };
+
+        function myFunction() {
+            var sin ={ {{ firstPlot.getSinusData(Item) }}
+                text: "sinus",
+                'hoverinfo' : "xaxis + text",
+                mode: 'lines',
+                line: {
+                    color: '#075EFE',
+                    width: 2
+                },
+                name: 'sinus'
+            };
+            var tria ={ {{ firstPlot.getTriangleData(Item) }}
+                text: "triangle",
+                'hoverinfo' : "xaxis + text",
+                mode: 'lines',
+                line: {
+                    color: '#fe142a',
+                    width: 2
+                },
+                name: 'triangle'
+            };
+            var data = [sin, tria];
+            CHARTMAIN = document.getElementById('chartMain');
+            Plotly.newPlot( 'chartMain', data, {
+                modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
+                modeBarButtonsToAdd: [{
+                    name: 'PNG_1000x500',
+                    icon: Plotly.Icons.camera,
+                    click: function(gd) {
+                        Plotly.downloadImage(gd, {format: 'png', width: 1000, height: 500, filename: 'analysis'});
+                    }
+                }]
+            });
+            console.log(tria);
+        }
+    </script>
+
+
+{% endblock %}
